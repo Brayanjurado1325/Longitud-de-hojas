@@ -1,48 +1,25 @@
-# Extraccion de datos Termicos
+
+# DATOS DE ENTRADA
+Los datos de entrada son todos los puntos de la nube de puntos etiquetados como una hoja.
 
 
-## Contexto 
+![Creacion de Mascara](https://github.com/Brayanjurado1325/Longitud-de-hojas/blob/main/Imagenes/1.png)
 
-## Descripcion de codigo 
+Inicialmente se recibe el vector con los puntos etiquetados como hoja, si el tamaño de este vector es mayor a los 1024 es necesario reducir este valor, para esto se realiza un muestreo para que la nube de puntos tenga un menor tamaño. 
 
-
-
-### Datos de entrada 
-Para la extracción de los datos de información térmica, se usa un algoritmo en Matlab que tiene como insumos las Imágenes Térmicas, RGB y el Excel con los valores térmicos, la imagen tiene un tamaño de 480x640, equivalente al tamaño de la matriz del archivo csv, la imagen termica se carga usando la funcion `imread` 
-
-![Imagen Termica](https://github.com/Brayanjurado1325/Extraccion/blob/main/Imagenes/ImTer.png)
+![Creacion de Mascara](https://github.com/Brayanjurado1325/Longitud-de-hojas/blob/main/Imagenes/2.png)
 
 
+# CREACION DE GRAFOS
 
-### Creacion de Mascara y extracccion de datos 
-La variable que guarda la imagen termica (Tambien podria usarse la imagen RGB de referencia) se denomica Tem, para poder crear la mascara se usa las siguientes lineas de codigo, abriendo una figura donde se creara el borde de la figura de manera manual.  
-
-   `figure`  
-   `mascara = roipoly(Tem);`  
-   `mascara = imcomplement(mascara);`  
-   `imshow(mascara);`  
-  
-El resultado de se refleja en la variable mascara, una matriz binaria de 480x64. 
-
-![Creacion de Mascara](https://github.com/Brayanjurado1325/Extraccion/blob/main/Imagenes/seleccionMas.png)
-
-Para aplicar la mascara sobre la matriz del archivo csv (M) se usa la linea de codigo `M(mascara) = 0;`obteniendo como resultado una matiz de 480x640 que contiene los valores de temperatura en la mascara y 0 en los otros valores. 
-
-![Aplicacion de MAscara](https://github.com/Brayanjurado1325/Extraccion/blob/main/Imagenes/Mascara.png)
-
-Posteriormente la matriz M se convierte en una nube de puntos en X,Y,Z donde X y Y son las coordenadas y Z son los datos de temperatura, dando como resultado una nube de puntos que se almacena en la variable Data. 
-
-![Extraccion de Data](https://github.com/Brayanjurado1325/Extraccion/blob/main/Imagenes/data.png)
-
-Debido a la gran candida de puntos se usa la funcion `Data_muestra= datasample(Data,150)` para muestrear la variable y obtener un muestreo de los datos de temperatura. 
-
-![Muestreo de datos](https://github.com/Brayanjurado1325/Extraccion/blob/main/Imagenes/Muestreo.png)
-
-### Segmentacion de datos 
-
-El algoritmo hace la clasificacion con me metodo de k-vecinos seccionando la panicula en 3 partes y dando un valor para cada seccion que debe registrarse de manera manual.
-
-![Muestreo de datos](https://github.com/Brayanjurado1325/Extraccion/blob/main/Imagenes/clusterpanicula.png)
+![Creacion de Mascara](https://github.com/Brayanjurado1325/Longitud-de-hojas/blob/main/Imagenes/3.png)
 
 
+## Crear formato para aplicar metodo Dijkstra.
+Para poder aplicar el método Dijkstra es necesario hacer crear un Dataframe teniendo como base los datos del grafo que se ha creado a partir de la nube de puntos tipo hoja, este Dataframe debe tener la estructura que se muestra a continuacion, donde se agrupan todas las conexiones del grafo y también se calcula su distancia euclídea entre los dos puntos, los valores de origen y destino hacen referencia al índice dentro del vector donde se encuentran estos puntos. 
 
+![Creacion de Mascara](https://github.com/Brayanjurado1325/Longitud-de-hojas/blob/main/Imagenes/4.png)
+
+## Aplicacion de Metodo de Dijkstra.
+
+Una vez aplicado el algoritmo que tiene como entrada los puntos de origen y destino, el algoritmo nos devuelve los saltos que debe seguir la ruta mínima con el menor costo, finalmente para encontrar la distancia se realiza la suma de las distancia entre los saltos. 
